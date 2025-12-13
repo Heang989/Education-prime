@@ -16,6 +16,8 @@ import LessonDetailPage from './pages/learning-path/LessonDetailPage'
 import LessonPlanPage from './pages/learning-path/LessonPlanPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
 import ClassPage from './pages/class/ClassPage'
+import TeacherLessonsPage from './pages/class/TeacherLessonsPage'
+import ClassLessonDetailPage from './pages/class/LessonDetailPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AuthLayouts from './components/layouts/AuthLayouts'
 import AdminLayouts from './components/layouts/AdminLayouts'
@@ -80,6 +82,21 @@ function App() {
                               <Route path='/class' element={
                                    <ProtectedRoute>
                                         <ClassPage />
+                                   </ProtectedRoute>
+                              } />
+                              <Route path='/teacher/:teacherId/lessons' element={
+                                   <ProtectedRoute>
+                                        <TeacherLessonsPage />
+                                   </ProtectedRoute>
+                              } />
+                              <Route path='/teacher/:teacherId/lesson/:lessonId' element={
+                                   <ProtectedRoute>
+                                        <ClassLessonDetailPage />
+                                   </ProtectedRoute>
+                              } />
+                              <Route path='/lesson/:lessonId' element={
+                                   <ProtectedRoute>
+                                        <ClassLessonDetailPage />
                                    </ProtectedRoute>
                               } />
                          </Route>
