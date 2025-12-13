@@ -8,4 +8,7 @@ export default defineConfig({
   server: {
     open: true, // Open browser directly without notification
   },
+  optimizeDeps: {
+    include: ['jspdf', 'html2canvas']
+  }
 })

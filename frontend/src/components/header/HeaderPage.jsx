@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../store/slices/authSlice'
 import logoImage from '../../assets/image logo/6bea2fd6-9cc9-4f3a-9b66-d644e3e8aba0.jpg'
+import { GiTeacher } from "react-icons/gi";
 
 const navLinks = [
   // { label: 'Home', path: '/' },
@@ -50,13 +51,11 @@ const modeButtons = [
     )
   },
   {
-    label: 'Quiz',
-    path: '/quize',
+    label: 'Class',
+    path: '/class',
     badgeClass: 'bg-violet-100 text-violet-600',
     icon: (
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <GiTeacher className="h-4 w-4" />
     )
   },
   {

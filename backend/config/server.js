@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url'
 import connectDB from './db.js'
 import authRoutes from '../routes/auth.route.js'
 import categoryRoutes from '../routes/categories.route.js'
+import teacherRoutes from '../routes/teachers.route.js'
+import lessonRoutes from '../routes/lessons.route.js'
 
 // Load env vars
 dotenv.config()
@@ -30,6 +32,8 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/categories', categoryRoutes)
+app.use('/api/teachers', teacherRoutes)
+app.use('/api/lessons', lessonRoutes)
 
 // Root route
 app.get('/', (req, res) => {

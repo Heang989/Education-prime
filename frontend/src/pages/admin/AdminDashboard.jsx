@@ -2,25 +2,31 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCategories, createCategory, updateCategory, deleteCategory } from '../../store/slices/categoriesSlice'
+import { fetchTeachers } from '../../store/slices/teachersSlice'
 import CategoryForm from '../../components/admin/CategoryForm'
 import UserManagement from '../../components/admin/UserManagement'
+import TeacherManagement from '../../components/admin/TeacherManagement'
+import LevelManagement from '../../components/admin/LevelManagement'
 
 const AdminDashboard = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingCategory, setEditingCategory] = useState(null)
-    const [activeTab, setActiveTab] = useState('categories') // 'categories' or 'users'
+    const [activeTab, setActiveTab] = useState('categories') // 'categories', 'users', 'teachers', or 'levels'
     const [searchQuery, setSearchQuery] = useState('')
+    const [selectedLevel, setSelectedLevel] = useState(null)
 
-    // Get categories from Redux store
+    // Get categories and teachers from Redux store
     const { categories: categoryList, loading: isLoading, error } = useSelector(
         (state) => state.categories
     )
+    const { teachers } = useSelector((state) => state.teachers)
 
-    // Load categories from API on mount
+    // Load categories and teachers from API on mount
     useEffect(() => {
         dispatch(fetchCategories())
+        dispatch(fetchTeachers())
     }, [dispatch])
 
     const handleSaveCategory = async (categoryData) => {
@@ -144,11 +150,105 @@ const AdminDashboard = () => {
                     >
                         User Management
                     </button>
+                    <button
+                        onClick={() => setActiveTab('teachers')}
+                        className={`px-6 py-3 text-sm font-semibold transition ${
+                            activeTab === 'teachers'
+                                ? 'border-b-2 border-violet-500 text-white'
+                                : 'text-slate-400 hover:text-white'
+                        }`}
+                    >
+                        Teachers
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('levels')}
+                        className={`px-6 py-3 text-sm font-semibold transition ${
+                            activeTab === 'levels'
+                                ? 'border-b-2 border-amber-500 text-white'
+                                : 'text-slate-400 hover:text-white'
+                        }`}
+                    >
+                        Levels
+                    </button>
                 </div>
 
                 {/* Tab Content */}
                 {activeTab === 'users' ? (
                     <UserManagement />
+                ) : activeTab === 'teachers' ? (
+                    <TeacherManagement />
+                ) : activeTab === 'levels' ? (
+                    selectedLevel ? (
+                        <LevelManagement level={selectedLevel} onBack={() => setSelectedLevel(null)} />
+                    ) : (
+                        <div className="space-y-6">
+                            {/* Levels Header */}
+                            <div className="mb-8">
+                                <h2 className="text-2xl font-bold text-white mb-2">Level Management</h2>
+                                <p className="text-slate-400">Manage lessons and content for each level (1-8)</p>
+                            </div>
+
+                            {/* Levels Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
+                                    <div
+                                        key={level}
+                                        onClick={() => setSelectedLevel(level)}
+                                        className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10 backdrop-blur hover:bg-white/10 transition-all duration-300 cursor-pointer group"
+                                    >
+                                        <div className="text-center">
+                                            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 mb-4 group-hover:scale-110 transition-transform duration-300">
+                                                <span className="text-4xl font-bold text-amber-400">L{level}</span>
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Level {level}</h3>
+                                            <div className="space-y-2 text-sm text-slate-400">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                    <span>6 Lessons</span>
+                                                </div>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    <span>Vocabulary</span>
+                                                </div>
+                                            </div>
+                                            <button className="mt-4 w-full rounded-xl bg-amber-600/20 px-4 py-2 text-sm font-semibold text-amber-400 hover:bg-amber-600/30 transition">
+                                                Manage Level {level}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Level Details Section */}
+                            <div className="mt-8 rounded-2xl bg-white/5 p-6 ring-1 ring-white/10 backdrop-blur">
+                                <h3 className="text-xl font-bold text-white mb-4">Level Overview</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div className="rounded-xl bg-white/5 p-4">
+                                        <div className="text-sm text-slate-400 mb-1">Total Levels</div>
+                                        <div className="text-2xl font-bold text-white">8</div>
+                                    </div>
+                                    <div className="rounded-xl bg-white/5 p-4">
+                                        <div className="text-sm text-slate-400 mb-1">Total Lessons</div>
+                                        <div className="text-2xl font-bold text-white">48</div>
+                                    </div>
+                                    <div className="rounded-xl bg-white/5 p-4">
+                                        <div className="text-sm text-slate-400 mb-1">Active Teachers</div>
+                                        <div className="text-2xl font-bold text-white">
+                                            {teachers?.length || 0}
+                                        </div>
+                                    </div>
+                                    <div className="rounded-xl bg-white/5 p-4">
+                                        <div className="text-sm text-slate-400 mb-1">Status</div>
+                                        <div className="text-2xl font-bold text-emerald-400">Active</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
                 ) : (
                     <>
                         {/* Categories Header */}
